@@ -31,6 +31,12 @@ export default {
     const geoMarker = ref(null)
 
     const getGeoLocation = () => {
+      // check session storage for coords
+      if (sessionStorage.getItem('coords')) {
+        coords.value = JSON.parse(sessionStorage.getItem('coords'))
+        plotGeoLocation(coords.value)
+        return
+      }
       fetchCoords.value = true
       navigator.geolocation.getCurrentPosition(setCoords, getLocError)
 
@@ -48,7 +54,7 @@ export default {
       coords.value = setSessionCoords
 
       //Now call the function to plot the location on the map
-      plotGeoLocation(coords)
+      plotGeoLocation(coords.value)
 
 
     }
@@ -56,7 +62,17 @@ export default {
       console.log(error)
     }
 
-    const plotGeoLocation = () => {
+    const plotGeoLocation = (coords) => {
+      // Create custom marker
+      const customMarker = leaflet.icon({
+        iconUrl: require('../assets/map-marker-red.svg'),
+        iconSize: [35, 35]
+      })
+      // Create new marker with coords and custom maker
+      geoMarker.value = leaflet.marker([coords.lat, coords.lng], { icon: customMarker }).addTo(map)
+
+      // Set mapView to current location
+      map.setView([coords.lat, coords.lng], 10)
 
     }
     return { coords, geoMarker, getLocError }
