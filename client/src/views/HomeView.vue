@@ -1,5 +1,6 @@
 <template>
   <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError" />
+  <MapFeatures />
   <div class="h-screen relative">
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -10,11 +11,13 @@
 import { onMounted, ref } from 'vue';
 import leaflet from 'leaflet'
 import GeoErrorModal from '@/components/GeoErrorModal.vue';
+import MapFeatures from '@/components/MapFeatures.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    GeoErrorModal
+    GeoErrorModal,
+    MapFeatures,
   },
   setup() {
     let map;
