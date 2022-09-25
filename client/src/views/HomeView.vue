@@ -1,6 +1,6 @@
 <template>
   <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError" />
-  <MapFeatures />
+  <MapFeatures :coords="coords" :fetchCoords="fetchCoords" />
   <div class="h-screen relative">
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -33,7 +33,7 @@ export default {
     })
 
     const coords = ref(null)
-    const fetchCoords = ref(null)
+    const fetchCoords = ref(true)
     const geoMarker = ref(null)
     const geoError = ref(true)
     const geoErrorMsg = ref('Fuck')
@@ -92,7 +92,7 @@ export default {
       geoErrorMsg.value = null
 
     }
-    return { coords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg }
+    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg }
   }
 }
 </script>
