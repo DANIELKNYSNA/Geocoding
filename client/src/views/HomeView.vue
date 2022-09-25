@@ -1,6 +1,6 @@
 <template>
   <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError" />
-  <MapFeatures :coords="coords" :fetchCoords="fetchCoords" />
+  <MapFeatures @getGeoLocation="getGeoLocation" :coords="coords" :fetchCoords="fetchCoords" />
   <div class="h-screen relative">
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -33,12 +33,18 @@ export default {
     })
 
     const coords = ref(null)
-    const fetchCoords = ref(true)
+    const fetchCoords = ref(null)
     const geoMarker = ref(null)
-    const geoError = ref(true)
-    const geoErrorMsg = ref('Fuck')
+    const geoError = ref(false)
+    const geoErrorMsg = ref(null)
 
     const getGeoLocation = () => {
+      if (coords.value) {
+        coords.value = null
+        sessionStorage.removeItem("coords")
+        map.removeLayer(geoMarker.value)
+        return
+      }
       // check session storage for coords
       if (sessionStorage.getItem('coords')) {
         coords.value = JSON.parse(sessionStorage.getItem('coords'))
@@ -92,7 +98,7 @@ export default {
       geoErrorMsg.value = null
 
     }
-    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg }
+    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation }
   }
 }
 </script>
