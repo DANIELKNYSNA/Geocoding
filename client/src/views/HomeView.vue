@@ -22,7 +22,7 @@ export default {
   setup() {
     let map;
     onMounted(() => {
-      map = leaflet.map('map').setView([-34.0553076, 23.0329035], 9);
+      map = leaflet.map('map').setView([28.538336, -81.379234], 10);
       leaflet.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${process.env.VUE_APP_API_KEY}`,
         {
           attribution: '© <a href="https://www.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
