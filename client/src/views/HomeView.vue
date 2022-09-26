@@ -1,6 +1,6 @@
 <template>
   <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError" />
-  <MapFeatures @getGeoLocation="getGeoLocation" :coords="coords" :fetchCoords="fetchCoords" />
+  <MapFeatures @getGeoLocation="getGeoLocation" :coords="coords" :fetchCoords="fetchCoords" @plotResult="plotResult" />
   <div class="h-screen relative">
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -98,7 +98,27 @@ export default {
       geoErrorMsg.value = null
 
     }
-    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation }
+
+    const resultMarker = ref(null)
+    const plotResult = (coords) => {
+      // Check if resultMaker has value
+      if (resultMarker.value) {
+        map.removeLayer(resultMarker.value)
+      }
+      // Create custom marker
+      const customMarker = leaflet.icon({
+        iconUrl: require('../assets/map-marker-blue.svg'),
+        iconSize: [35, 35]
+      })
+      // Create new marker with coords and custom maker
+      resultMarker.value = leaflet.marker([coords.coordinates[1], coords.coordinates[0]], { icon: customMarker }).addTo(map)
+
+      // Set mapView to current location
+      map.setView([coords.coordinates[1], coords.coordinates[0]], 10)
+
+    }
+
+    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation, plotResult }
   }
 }
 </script>

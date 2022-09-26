@@ -13,7 +13,7 @@
           <loadingSpinner v-if="!searchData" />
           <div v-else>
             <div class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
-              v-for="(result, index) in searchData" :key="index">
+              v-for="(result, index) in searchData" :key="index" @click="selectResult(result)">
               <i class="fas fa-map-marker-alt"></i>
               <p class="text-xs">{{ result.place_name_en }}</p>
             </div>
@@ -37,7 +37,7 @@ import loadingSpinner from './LoadingSpinner.vue'
 export default {
   props: ['coords', 'fetchCoords'],
   components: { loadingSpinner },
-  setup(props) {
+  setup(props, { emit }) {
     const searchQuery = ref(null)
     const searchData = ref(null)
     const queryTimeout = ref(null)
@@ -61,8 +61,11 @@ export default {
         }
       }, 750)
     }
+    const selectResult = (result) => {
+      emit('plotResult', result.geometry)
+    }
 
-    return { searchData, searchQuery, queryTimeout, search }
+    return { searchData, searchQuery, queryTimeout, search, selectResult }
   }
 }
 </script>
