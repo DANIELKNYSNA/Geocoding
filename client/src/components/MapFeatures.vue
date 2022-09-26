@@ -9,10 +9,14 @@
         <i class="fas fa-search"></i>
       </div>
       <div class="absolute mt-2 w-full">
-        <div class="h-[200px] overflow-scroll bg-white rounded-md">
-          <div class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white">
-            <i class="fas fa-map-marker-alt"></i>
-            <p class="text-xs">testing result</p>
+        <div v-if="searchQuery" class="h-[200px] overflow-scroll bg-white rounded-md">
+          <loadingSpinner v-if="!searchData" />
+          <div v-else>
+            <div class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
+              v-for="(result, index) in searchData" :key="index">
+              <i class="fas fa-map-marker-alt"></i>
+              <p class="text-xs">{{ result.place_name_en }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -28,8 +32,11 @@
 <script>
 import { ref } from 'vue'
 import axios from 'axios'
+import loadingSpinner from './LoadingSpinner.vue'
+
 export default {
   props: ['coords', 'fetchCoords'],
+  components: { loadingSpinner },
   setup(props) {
     const searchQuery = ref(null)
     const searchData = ref(null)
@@ -37,6 +44,7 @@ export default {
 
     const search = () => {
       clearTimeout(queryTimeout.value)
+      searchData.value = null
       queryTimeout.value = setTimeout(async () => {
         if (searchQuery.value !== "") {
           const params = new URLSearchParams({
