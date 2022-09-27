@@ -1,6 +1,7 @@
 <template>
   <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError" />
-  <MapFeatures @getGeoLocation="getGeoLocation" :coords="coords" :fetchCoords="fetchCoords" @plotResult="plotResult" />
+  <MapFeatures @getGeoLocation="getGeoLocation" :coords="coords" :fetchCoords="fetchCoords" @plotResult="plotResult"
+    :searchResults="searchResults" @toggleSearchResults="toggleSearchResults" />
   <div class="h-screen relative">
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -29,6 +30,10 @@ export default {
           tileSize: 512,
           zoomOffset: -1
         }).addTo(map);
+
+      map.on('moveend', () => {
+        closeSearchResults();
+      })
       getGeoLocation()
     })
 
@@ -114,11 +119,19 @@ export default {
       resultMarker.value = leaflet.marker([coords.coordinates[1], coords.coordinates[0]], { icon: customMarker }).addTo(map)
 
       // Set mapView to current location
-      map.setView([coords.coordinates[1], coords.coordinates[0]], 10)
-
+      map.setView([coords.coordinates[1], coords.coordinates[0]], 14)
+      closeSearchResults()
+    }
+    const searchResults = ref(null)
+    const toggleSearchResults = () => {
+      searchResults.value = !searchResults.value
+    }
+    const closeSearchResults = () => {
+      searchResults.value = null
     }
 
-    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation, plotResult }
+
+    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation, plotResult, toggleSearchResults, closeSearchResults, searchResults, }
   }
 }
 </script>
