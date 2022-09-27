@@ -1,7 +1,7 @@
 <template>
   <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError" />
   <MapFeatures @getGeoLocation="getGeoLocation" :coords="coords" :fetchCoords="fetchCoords" @plotResult="plotResult"
-    :searchResults="searchResults" @toggleSearchResults="toggleSearchResults" />
+    :searchResults="searchResults" @toggleSearchResults="toggleSearchResults" @removeResult="removeResult" />
   <div class="h-screen relative">
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -130,8 +130,12 @@ export default {
       searchResults.value = null
     }
 
+    const removeResult = () => {
+      map.removeLayer(resultMarker.value)
+    }
 
-    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation, plotResult, toggleSearchResults, closeSearchResults, searchResults, }
+
+    return { coords, fetchCoords, geoMarker, getLocError, closeGeoError, geoError, geoErrorMsg, getGeoLocation, plotResult, toggleSearchResults, closeSearchResults, searchResults, removeResult }
   }
 }
 </script>
