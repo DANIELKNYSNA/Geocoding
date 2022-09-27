@@ -15,5 +15,10 @@ app.use(cors());
 
 app.use("/api/search", require("./routes/searchResults.js"));
 
+//handle production
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(`${__dirname}/public`));
+}
+
 
 app.listen(PORT, () => console.log(`app has started on port : ${PORT}`));

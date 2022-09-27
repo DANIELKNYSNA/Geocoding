@@ -64,11 +64,9 @@ export default {
             limit: 10,
             proximity: props.coords ? `${props.coords.lng},${props.coords.lat}` : "0,0",
           })
-          const getData = await axios.get(`http://localhost:3000/api/search/${searchQuery.value}?${params}`)
-          console.log(getData)
+          const getData = await axios.get(`api/search/${searchQuery.value}?${params}`)
 
           searchData.value = getData.data.features
-          console.log(searchData.value)
         }
       }, 750)
     }
